@@ -8,6 +8,11 @@ public class HelloWorldController {
 	
     @RequestMapping("/hello")
     public String index() {
-        return "Hello World";
+        return "Hello World!!!";
+    }
+
+    @RequestMapping("/checkUser")
+    public String checkUser(String username){
+        return String.format("user %s is valid", username);
     }
 }
