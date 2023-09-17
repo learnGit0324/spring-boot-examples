@@ -37,8 +37,10 @@ https://activemq.apache.org/components/classic/download/
         <property name="port" value="8161"/>
     </bean>
 ![img_2.png](img_2.png)
-11. 然后重启 
+
+11. 然后重启
 ![img_1.png](img_1.png)
+
 12. 使用windows访问
 ![img.png](img.png)
 
