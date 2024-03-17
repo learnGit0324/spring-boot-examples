@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<hazelcast xmlns="http://www.hazelcast.com/schema/config"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.hazelcast.com/schema/config
+            http://www.hazelcast.com/schema/config/hazelcast-config-3.12.12.xsd">
+    <network>
+        <!-- 设置从端口号5701开始 如果不可用就自增使用5702 如果到5801还不可用 则没有可用端口-->
+        <port auto-increment="true" port-count="100">5701</port>
+        <outbound-ports>
+            <ports>0</ports>
+        </outbound-ports>
+
+        <join>
+            <multicast enabled="false">
+                <multicast-group>224.2.2.3</multicast-group>
+                <multicast-port>54327</multicast-port>
+            </multicast>
+            <tcp-ip enabled="true">
+                <interface>127.0.0.1</interface>
+                <member>127.0.0.1</member>
+            </tcp-ip>
+
+        </join>
+        <interfaces enabled="false">
+            <interface>10.10.1.*</interface>
+        </interfaces>
+
+        <ssl enabled="false"/>
+        <socket-interceptor enabled="false"/>
+        <!--对称加密 Hazelcast允许您加密整个套接字上Hazelcast所有成员之间的沟通。加密是基于Java加密体系结构的。在对称加密中,每个节点使用相同的密钥,所以密钥是共享的-->
+        <symmetric-encryption enabled="false">
+            <!--
+               encryption algorithm such as
+               DES/ECB/PKCS5Padding,
+               PBEWithMD5AndDES,
+               AES/CBC/PKCS5Padding,
+               Blowfish,
+               DESede
+            -->
+            <algorithm>PBEWithMD5AndDES</algorithm>
+            <!-- salt value to use when generating the secret key -->
+            <salt>thesalt</salt>
+            <!-- pass phrase to use when generating the secret key -->
+            <password>thepass</password>
+            <!-- iteration count to use when generating the secret key -->
+            <iteration-count>19</iteration-count>
+        </symmetric-encryption>
+    </network>
+
+    <!---->
+    <executor-service name="exec">
+        <!--每个执行者成员执行器的线程数量-->
+        <pool-size>1</pool-size>
+        <!--执行者的任务队列容量-->
+        <queue-capacity>10</queue-capacity>
+        <!--一些统计数据就像等待操作数,操作数,操作完成,取消操作数可以通过设置该参数的值是真来进行检索，检索统计数据的方法是getLocalExecutorStats()-->
+        <statistics-enabled>true</statistics-enabled>
+    </executor-service>
+
+    <!--Hazelcast分布式队列有一个默认的同步备份。通过这个备份,当一个集群成员的一个队列停止时,另一个成员拥有备份将继续下去。因此,不会有任何项目丢失。您可以使用backup-count元素声明式配置定义同步备份的数量。队列也可以异步备份,您可以使用async-backup-count元素配置定义备份数量。-->
+    <queue name="default">
+        <!--队列的最大值。当JVM本地队列大小达到最大值时,所有put/offer操作将被封锁,直到队列的大小下降低于JVM的最大值。值为0和Integer.MAX_VALUE之间的任何整数。0表示Integer.MAX_VALUE. 默认值为0。-->
+        <max-size>0</max-size>
+        <!--备份的数量。如果1设置为备份数量，也就是说为了安全将map上的所有条目复制到另一个JVM上 0表示没有备份。-->
+        <backup-count>1</backup-count>
+
+        <!--异步备份数量，0表示没有备份-->
+        <async-backup-count>0</async-backup-count>
+        <!--空队列生存时间，-1表示一直存在-->
+        <empty-queue-ttl>-1</empty-queue-ttl>
+    </queue>
+</hazelcast>
